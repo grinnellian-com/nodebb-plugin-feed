@@ -148,7 +148,10 @@ define('forum/feed', [
 	}
 
 	function onPostsLoaded(posts, callback) {
-		app.parseAndTranslate('feed', 'posts', { posts: posts }, function (html) {
+		app.parseAndTranslate('feed', 'posts', {
+			posts: posts,
+			showThumbs: ajaxify.data.showThumbs,
+		}, function (html) {
 			$('[component="posts"]').append(html);
 			html.find('img:not(.not-responsive)').addClass('img-fluid');
 			html.find('.timeago').timeago();
