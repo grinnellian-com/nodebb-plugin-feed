@@ -18,9 +18,9 @@ define('forum/feed', [
 		});
 		page = ajaxify.data.currentPage;
 		const feedEl = $('.feed');
-		if (!config.usePagination) {
-			infinitescroll.init(feedEl, loadMore);
-		}
+
+		infinitescroll.init(feedEl, loadMore);
+
 		const currentShowAllPosts = $('#showAllPosts').is(':checked');
 		const currentShowFollowedUsers = $('#showFollowedUsers').is(':checked');
 		feedEl.on('hidden.bs.dropdown', '#options-dropdown', function () {

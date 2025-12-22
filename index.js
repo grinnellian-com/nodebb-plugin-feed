@@ -145,8 +145,8 @@ async function renderFeed(req, res) {
 }
 
 async function getTopicTs(sets, index) {
-	const topic = await db.getSortedSetRangeWithScores(sets, index, index);
-	return topic ? topic.score : Date.now();
+	const topics = await db.getSortedSetRangeWithScores(sets, index, index);
+	return topics.length ? topics[0].score : Date.now();
 }
 
 function getCidsArray(cid) {

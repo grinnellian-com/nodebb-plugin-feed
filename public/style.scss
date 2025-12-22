@@ -4,3 +4,9 @@
 		margin-bottom: 1rem;
 	}
 }
+
+[component="topic/thumb/list"] {
+	&.thumbs-collapsed img:nth-of-type(n+4) {
+		display: none!important;
+	}
+}

@@ -72,11 +72,14 @@
 							</a>
 						</div>
 
-						<div class="position-absolute end-0 bottom-0 p-3 d-flex gap-2 align-items-center pe-none">
+						<div component="topic/thumb/list" class="position-absolute end-0 bottom-0 p-3 d-flex gap-2  pe-none {{{ if greaterthan(./topic.thumbs.length, "4") }}}thumbs-collapsed{{{ end }}}">
 							{{{ each ./topic.thumbs }}}
 							{{{ if (@index != 0) }}}
 							<img class="rounded-1" style="max-height: 64px; object-fit: contain;" src="{./url}">
 							{{{ end }}}
+							{{{ end }}}
+							{{{ if greaterthan(./topic.thumbs.length, "4") }}}
+							<div class="btn btn-light fw-semibold d-flex align-items-center" style="max-height:64px; contain;">+{increment(./topic.thumbs.length, "-3")}</div>
 							{{{ end }}}
 						</div>
 					</div>
