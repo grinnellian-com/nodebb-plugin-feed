@@ -106,6 +106,58 @@ define('forum/feed', [
 			}).catch(alerts.error);
 		});
 
+		feedEl.on('keypress', '.quick-reply input', function (e) {
+			if (e.which === 13) {
+				$(this).siblings('[data-action="quick-reply"]').click();
+			}
+		});
+
+		feedEl.on('click', '[data-action="quick-reply"]', function () {
+			const $this = $(this);
+			const tid = $this.attr('data-tid');
+			const input = $this.siblings('input');
+			const content = input.val();
+
+			if (!content) {
+				return;
+			}
+
+			api.post(`/topics/${tid}`, { content: content }, function (err, data) {
+				if (err) {
+					return alerts.error(err);
+				}
+
+				let repliesContainer = $this.parents('.post-body').find('.replies');
+				if (!repliesContainer.length) {
+					repliesContainer = $('<div class="replies mt-3 pt-3 border-top"></div>');
+					$this.parent().before(repliesContainer);
+				}
+
+				const html = `
+					<div class="reply mb-3">
+						<div class="d-flex gap-2">
+							<a href="${config.relative_path}/user/${data.user.userslug}">${helpers.buildAvatar(data.user, "24px", true, "not-responsive")}</a>
+							<div class="flex-grow-1">
+								<div class="d-flex align-items-center gap-1 text-xs">
+									<a href="${config.relative_path}/user/${data.user.userslug}" class="fw-bold text-reset">${data.user.displayname}</a>
+									<span class="text-muted">&bull;</span>
+									<span class="timeago text-muted" title="${data.timestampISO}">just now</span>
+								</div>
+								<div class="content text-sm">
+									${data.content}
+								</div>
+							</div>
+						</div>
+					</div>`;
+
+				const $reply = $(html);
+				repliesContainer.append($reply);
+				$reply.find('.timeago').timeago();
+
+				input.val('');
+			});
+		});
+
 		toggleShowMoreButtons(feedEl);
 
 		feedEl.on('click', '[component="show/more"]', function () {

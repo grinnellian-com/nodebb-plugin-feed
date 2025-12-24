@@ -121,6 +121,38 @@
 
 								<a href="#" data-pid="{./pid}" data-is-main="{./isMainPost}" data-tid="{./tid}" data-action="reply" class="btn btn-link btn-sm text-body"><i class="fa-fw fa fa-reply text-muted"></i> [[topic:reply]]</a>
 							</div>
+
+							{{{ if ./replies.length }}}
+							<div class="replies mt-3 pt-3 border-top">
+								{{{ each ./replies }}}
+								<div class="reply mb-3">
+									<div class="d-flex gap-2">
+										<a href="{config.relative_path}/user/{./user.userslug}">{buildAvatar(./user, "24px", true, "not-responsive")}</a>
+										<div class="flex-grow-1">
+											<div class="d-flex align-items-center gap-1 text-xs">
+												<a href="{config.relative_path}/user/{./user.userslug}" class="fw-bold text-reset">{./user.displayname}</a>
+												<span class="text-muted">&bull;</span>
+												<span class="timeago text-muted" title="{./timestampISO}"></span>
+											</div>
+											<div class="content text-sm">
+												{./content}
+											</div>
+										</div>
+									</div>
+								</div>
+								{{{ end }}}
+								{{{ if greaterthan(./topic.postcount, "3") }}}
+								<a href="{config.relative_path}/topic/{./topic.slug}" class="btn btn-link btn-sm p-0 text-muted">View more replies...</a>
+								{{{ end }}}
+							</div>
+							{{{ end }}}
+
+							{{{ if ../canPost }}}
+							<div class="quick-reply mt-3 d-flex gap-2">
+								<input type="text" class="form-control form-control-sm rounded-pill" placeholder="Write a reply..." data-tid="{./tid}">
+								<button class="btn btn-primary btn-sm rounded-pill" data-action="quick-reply" data-tid="{./tid}"><i class="fa fa-paper-plane"></i></button>
+							</div>
+							{{{ end }}}
 						</div>
 					</div>
 				</li>

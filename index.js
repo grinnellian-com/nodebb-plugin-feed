@@ -125,6 +125,34 @@ async function renderFeed(req, res) {
 		}
 	});
 
+	const mainPosts = postData.filter(p => p.topic && String(p.pid) === String(p.topic.mainPid));
+	if (mainPosts.length > 0) {
+		await Promise.all(mainPosts.map(async (p) => {
+			const tid = p.tid;
+			const replyCount = p.topic.postcount;
+			if (replyCount === 0) {
+				p.replies = [];
+				return;
+			}
+
+			let pids = await topics.getTopicPostIds(tid, 1, 2);
+			if (replyCount > 2) {
+				const lastPid = await topics.getTopicPostIds(tid, replyCount, replyCount);
+				if (lastPid && lastPid.length) {
+					pids.push(lastPid[0]);
+				}
+			}
+
+			pids = _.uniq(pids);
+			if (pids.length) {
+				const replies = await posts.getPostSummaryByPids(pids, req.uid, { stripTags: false });
+				p.replies = replies;
+			} else {
+				p.replies = [];
+			}
+		}));
+	}
+
 	let title = '[[feed:feed]]';
 	if (meta.config.homePageRoute && meta.config.homePageRoute !== 'feed') {
 		title = meta.config.homePageTitle || '[[global:home]]';
