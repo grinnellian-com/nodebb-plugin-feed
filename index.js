@@ -135,12 +135,21 @@ async function renderFeed(req, res) {
 				return;
 			}
 
-			let pids = await topics.getTopicPostIds(tid, 1, 2);
-			if (replyCount > 2) {
-				const lastPid = await topics.getTopicPostIds(tid, replyCount, replyCount);
-				if (lastPid && lastPid.length) {
-					pids.push(lastPid[0]);
+			let pids = await topics.getPids(tid);
+			if (pids.length > 0) {
+				// Get first 2 replies (skipping main pid if it's included, but getPids usually returns all)
+				// We want replies, so we should filter out the mainPid if necessary, but here we just want the first few posts.
+				// Actually, getPids returns all pids. We want indices 1 and 2 (0 is main post).
+				let replyPids = pids.slice(1, 3);
+
+				if (replyCount > 2) {
+					const lastPid = pids[pids.length - 1];
+					replyPids.push(lastPid);
 				}
+
+				pids = _.uniq(replyPids);
+			} else {
+				pids = [];
 			}
 
 			pids = _.uniq(pids);
