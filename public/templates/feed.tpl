@@ -147,7 +147,7 @@
 							</div>
 							{{{ end }}}
 
-							{{{ if ../canPost }}}
+							{{{ if loggedIn }}}
 							<div class="quick-reply mt-3 d-flex gap-2">
 								<input type="text" class="form-control form-control-sm rounded-pill" placeholder="Write a reply..." data-tid="{./tid}">
 								<button class="btn btn-primary btn-sm rounded-pill" data-action="quick-reply" data-tid="{./tid}"><i class="fa fa-paper-plane"></i></button>
